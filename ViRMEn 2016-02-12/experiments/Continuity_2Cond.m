@@ -3,7 +3,6 @@ function code = Continuity_2Cond
 %   code = Continuity Returns handles to the functions that ViRMEn
 %   executes during engine initialization, runtime and termination.
 
-
 % Begin header code - DO NOT EDIT
 code.initialization = @initializationCodeFun;
 code.runtime = @runtimeCodeFun;
@@ -43,8 +42,6 @@ vr.RightEndWallWhite = vr.worlds{1}.objects.triangles(vr.worlds{1}.objects.indic
 vr.TTopWallLeftWhite = vr.worlds{1}.objects.triangles(vr.worlds{1}.objects.indices.TTopWallLeftWhite,:);
 vr.TTopWallRightWhite = vr.worlds{1}.objects.triangles(vr.worlds{1}.objects.indices.TTopWallRightWhite,:);
 vr.WhiteLeftTower = vr.worlds{1}.objects.triangles(vr.worlds{1}.objects.indices.WhiteLeftTower,:);
-vr.WhiteRightTower = vr.worlds{1}.objects.triangles(vr.worlds{1}.objects.indices.WhiteRightTower,:);
-vr.BlackLeftTower = vr.worlds{1}.objects.triangles(vr.worlds{1}.objects.indices.BlackLeftTower,:);
 vr.BlackRightTower = vr.worlds{1}.objects.triangles(vr.worlds{1}.objects.indices.BlackRightTower,:);
 
 %Define groups for mazes 
@@ -53,39 +50,24 @@ beginWhite = [vr.LeftWallWhite(1):vr.LeftWallWhite(2) vr.RightWallWhite(1):vr.Ri
 whiteLeft = [vr.RightArmWallBlack(1):vr.RightArmWallBlack(2) vr.RightEndWallBlack(1):vr.RightEndWallBlack(2)...
     vr.TTopWallRightBlack(1):vr.TTopWallRightBlack(2) vr.LeftArmWallWhite(1):vr.LeftArmWallWhite(2)...
     vr.LeftEndWallWhite(1):vr.LeftEndWallWhite(2) vr.TTopWallLeftWhite(1):vr.TTopWallLeftWhite(2)];
-whiteRight = [vr.RightArmWallWhite(1):vr.RightArmWallWhite(2) vr.RightEndWallWhite(1):vr.RightEndWallWhite(2)...
-    vr.TTopWallRightWhite(1):vr.TTopWallRightWhite(2) vr.LeftArmWallBlack(1):vr.LeftArmWallBlack(2)...
-    vr.LeftEndWallBlack(1):vr.LeftEndWallBlack(2) vr.TTopWallLeftBlack(1):vr.TTopWallLeftBlack(2)];
 backBlack = vr.BackWallBlack(1):vr.BackWallBlack(2);
 backWhite = vr.BackWallWhite(1):vr.BackWallWhite(2);
 
 whiteLeftTower = vr.WhiteLeftTower(1):vr.WhiteLeftTower(2);
-blackLeftTower = vr.BlackLeftTower(1):vr.BlackLeftTower(2);
-whiteRightTower = vr.WhiteRightTower(1):vr.WhiteRightTower(2);
 blackRightTower = vr.BlackRightTower(1):vr.BlackRightTower(2);
-
-vr.blackLeft = [beginBlack whiteRight blackLeftTower whiteRightTower backBlack];
 
 vr.blackRight = [beginBlack whiteLeft blackRightTower whiteLeftTower backBlack];
 
 vr.whiteLeft = [beginWhite whiteLeft backWhite whiteLeftTower blackRightTower];
 
-vr.whiteRight = [beginWhite whiteRight backWhite blackLeftTower whiteRightTower];
-
 vr.worlds{1}.surface.visible(:) = 0;
-vr.cuePos = randi(4);
-if vr.cuePos == 1
-    vr.currentCueWorld = 1;
-    vr.worlds{1}.surface.visible(vr.blackLeft) = 1;
-elseif vr.cuePos == 2
+vr.cuePos = randi([2 3],1);
+if vr.cuePos == 2
     vr.currentCueWorld = 2;
     vr.worlds{1}.surface.visible(vr.blackRight) = 1;
 elseif vr.cuePos == 3
     vr.currentCueWorld = 3;
     vr.worlds{1}.surface.visible(vr.whiteLeft) = 1;
-elseif vr.cuePos == 4
-    vr.currentCueWorld = 4;
-    vr.worlds{1}.surface.visible(vr.whiteRight) = 1;
 else
     error('No World');
 end
@@ -175,34 +157,25 @@ if vr.inITI == 1
     if vr.itiTime > vr.itiDur
         vr.inITI = 0;
         
-%         if size(vr.trialResults,2) >= vr.adapSpeed
-%             vr.percBlack = sum(vr.trialResults(3,(end-vr.adapSpeed+1):end))/vr.adapSpeed;
-%             vr.percLeft = sum(vr.trialResults(2,(end-vr.adapSpeed+1):end))/vr.adapSpeed;
-%         else
-%             vr.percBlack = sum(vr.trialResults(3,1:end))/size(vr.trialResults,2);
-%             vr.percLeft = sum(vr.trialResults(2,1:end))/size(vr.trialResults,2);
-%         end
-%         randLeft = rand;
-%         if randLeft >= vr.percLeft
-%             vr.cuePos = 3; %left
-%         else
-%             vr.cuePos = 2; %right
-%         end
+        if size(vr.trialResults,2) >= vr.adapSpeed
+            vr.percLeft = sum(vr.trialResults(2,(end-vr.adapSpeed+1):end))/vr.adapSpeed; %percent trial that we want to set to left
+        else
+            vr.percLeft = sum(vr.trialResults(2,1:end))/size(vr.trialResults,2);
+        end
+        randLeft = rand;
+        if randLeft >= vr.percLeft % if he always turns right, percLeft is high and we more often set condition to left
+            vr.cuePos = 3; %left
+        else
+            vr.cuePos = 2; %right
+        end
 
-vr.cuePos = randi([2 3],1);
-        
-        if vr.cuePos == 1
-            vr.currentCueWorld = 1;
-            vr.worlds{1}.surface.visible(vr.blackLeft) = 1;
-        elseif vr.cuePos == 2
+    vr.cuePos = randi([2 3],1);        
+        if vr.cuePos == 2
             vr.currentCueWorld = 2;
             vr.worlds{1}.surface.visible(vr.blackRight) = 1;
         elseif vr.cuePos == 3
             vr.currentCueWorld = 3;
             vr.worlds{1}.surface.visible(vr.whiteLeft) = 1;
-        elseif vr.cuePos == 4
-            vr.currentCueWorld = 4;
-            vr.worlds{1}.surface.visible(vr.whiteRight) = 1;
         else
             error('No World');
         end

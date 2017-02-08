@@ -38,8 +38,6 @@ vr.RightEndWallWhite = vr.worlds{1}.objects.triangles(vr.worlds{1}.objects.indic
 vr.TTopWallLeftWhite = vr.worlds{1}.objects.triangles(vr.worlds{1}.objects.indices.TTopWallLeftWhite,:);
 vr.TTopWallRightWhite = vr.worlds{1}.objects.triangles(vr.worlds{1}.objects.indices.TTopWallRightWhite,:);
 vr.WhiteLeftTower = vr.worlds{1}.objects.triangles(vr.worlds{1}.objects.indices.WhiteLeftTower,:);
-vr.WhiteRightTower = vr.worlds{1}.objects.triangles(vr.worlds{1}.objects.indices.WhiteRightTower,:);
-vr.BlackLeftTower = vr.worlds{1}.objects.triangles(vr.worlds{1}.objects.indices.BlackLeftTower,:);
 vr.BlackRightTower = vr.worlds{1}.objects.triangles(vr.worlds{1}.objects.indices.BlackRightTower,:);
 
 %Define groups for mazes
@@ -54,23 +52,21 @@ white = [vr.RightEndWallWhite(1):vr.RightEndWallWhite(2)...
 backBlack = vr.BackWallBlack(1):vr.BackWallBlack(2);
 backWhite = vr.BackWallWhite(1):vr.BackWallWhite(2);
 whiteLeftTower = vr.WhiteLeftTower(1):vr.WhiteLeftTower(2);
-blackLeftTower = vr.BlackLeftTower(1):vr.BlackLeftTower(2);
-whiteRightTower = vr.WhiteRightTower(1):vr.WhiteRightTower(2);
 blackRightTower = vr.BlackRightTower(1):vr.BlackRightTower(2);
 
 
-vr.blackLeftTower = [beginBlack black backBlack blackLeftTower];
+vr.blackRightTower = [beginBlack black backBlack blackRightTower];
 
-vr.whiteRightTower = [beginWhite white backWhite whiteRightTower];
+vr.whiteLeftTower = [beginWhite white backWhite whiteLeftTower];
 
 vr.worlds{1}.surface.visible(:) = 0;
 vr.cuePos = randi(2);
 if vr.cuePos == 1
     vr.currentCueWorld = 1;
-    vr.worlds{1}.surface.visible(vr.blackLeftTower) = 1;
+    vr.worlds{1}.surface.visible(vr.blackRightTower) = 1;
 elseif vr.cuePos == 2
     vr.currentCueWorld = 2;
-    vr.worlds{1}.surface.visible(vr.whiteRightTower) = 1;
+    vr.worlds{1}.surface.visible(vr.whiteLeftTower) = 1;
 else
     error('No World');
 end
@@ -98,8 +94,6 @@ if ~vr.debugMode
     end
 end
 vr.iterationNum=vr.iterationNum+1;
-
-
 
 if vr.inITI == 0 && abs(vr.position(2)) > eval(vr.exper.variables.MazeLengthAhead)
     if ~vr.debugMode
@@ -142,10 +136,10 @@ if vr.inITI == 1
         vr.cuePos = randi(2);
         if vr.cuePos == 1
             vr.currentCueWorld = 1;
-            vr.worlds{1}.surface.visible(vr.blackLeftTower) = 1;
+            vr.worlds{1}.surface.visible(vr.blackRightTower) = 1;
         elseif vr.cuePos == 2
             vr.currentCueWorld = 2;
-            vr.worlds{1}.surface.visible(vr.whiteRightTower) = 1;
+            vr.worlds{1}.surface.visible(vr.whiteLeftTower) = 1;
         else
             error('No World');
         end

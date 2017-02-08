@@ -342,42 +342,23 @@ if vr.inITI == 1
                 end
             end
             
-            %perform adaptation
+%             %perform adaptation
 %             if vr.adaptive
 %                 if size(vr.trialResults,2) >= vr.adapSpeed
-%                     vr.percBlack = sum(vr.trialResults(3,(end-vr.adapSpeed+1):end))/vr.adapSpeed;
-%                     vr.percLeft = sum(vr.trialResults(2,(end-vr.adapSpeed+1):end))/vr.adapSpeed;
+%                     vr.percLeft = sum(vr.trialResults(2,(end-vr.adapSpeed+1):end))/vr.adapSpeed; %percent trial that we want to set to left
 %                 else
-%                     vr.percBlack = sum(vr.trialResults(3,1:end))/size(vr.trialResults,2);
 %                     vr.percLeft = sum(vr.trialResults(2,1:end))/size(vr.trialResults,2);
 %                 end
 %                 randLeft = rand;
-%                 randColor = rand;
-%                 if randLeft >= vr.percLeft
-%                     if randColor >= vr.percBlack
-%                         vr.cuePos = 1;
-%                     else
-%                         vr.cuePos = 3;
-%                     end
+%                 if randLeft >= vr.percLeft % if he always turns right, percLeft is high and we more often set condition to left
+%                     vr.cuePos = 3; %left
 %                 else
-%                     if randColor >= vr.percBlack
-%                         vr.cuePos = 2;
-%                     else
-%                         vr.cuePos = 4;
-%                     end
+%                     vr.cuePos = 2; %right
 %                 end
-%             else
-%                 vr.cuePos = randi(4);
 %             end
 vr.cuePos = randsample(vr.Cues,1);
             
             switch vr.cuePos
-                case 1
-                    vr.worlds{1}.surface.visible(vr.blackLeftOn) = 1;
-                    vr.worlds{1}.surface.visible(vr.LeftWallBlack(1) + ceil((1-vr.greyFac)*(vr.LeftWallBlack(2)-vr.LeftWallBlack(1))):vr.LeftWallBlack(2)) = 0;
-                    vr.worlds{1}.surface.visible(vr.RightWallBlack(1) + ceil((1-vr.greyFac)*(vr.RightWallBlack(2)-vr.RightWallBlack(1))):vr.RightWallBlack(2)) = 0;
-                    vr.worlds{1}.surface.visible(vr.LeftWallDelay(1) + ceil((1-vr.greyFac)*(vr.LeftWallDelay(2)-vr.LeftWallDelay(1))):vr.LeftWallDelay(2)) = 1;
-                    vr.worlds{1}.surface.visible(vr.RightWallDelay(1) + ceil((1-vr.greyFac)*(vr.RightWallDelay(2)-vr.RightWallDelay(1))):vr.RightWallDelay(2)) = 1;
                 case 2
                     vr.worlds{1}.surface.visible(vr.blackRightOn) = 1;
                     vr.worlds{1}.surface.visible(vr.LeftWallBlack(1) + ceil((1-vr.greyFac)*(vr.LeftWallBlack(2)-vr.LeftWallBlack(1))):vr.LeftWallBlack(2)) = 0;
@@ -386,12 +367,6 @@ vr.cuePos = randsample(vr.Cues,1);
                     vr.worlds{1}.surface.visible(vr.RightWallDelay(1) + ceil((1-vr.greyFac)*(vr.RightWallDelay(2)-vr.RightWallDelay(1))):vr.RightWallDelay(2)) = 1;
                 case 3
                     vr.worlds{1}.surface.visible(vr.whiteLeftOn) = 1;
-                    vr.worlds{1}.surface.visible(vr.LeftWallWhite(1) + ceil((1-vr.greyFac)*(vr.LeftWallWhite(2)-vr.LeftWallWhite(1))):vr.LeftWallWhite(2)) = 0;
-                    vr.worlds{1}.surface.visible(vr.RightWallWhite(1) + ceil((1-vr.greyFac)*(vr.RightWallWhite(2)-vr.RightWallWhite(1))):vr.RightWallWhite(2)) = 0;
-                    vr.worlds{1}.surface.visible(vr.LeftWallDelay(1) + ceil((1-vr.greyFac)*(vr.LeftWallDelay(2)-vr.LeftWallDelay(1))):vr.LeftWallDelay(2)) = 1;
-                    vr.worlds{1}.surface.visible(vr.RightWallDelay(1) + ceil((1-vr.greyFac)*(vr.RightWallDelay(2)-vr.RightWallDelay(1))):vr.RightWallDelay(2)) = 1;
-                case 4
-                    vr.worlds{1}.surface.visible(vr.whiteRightOn) = 1;
                     vr.worlds{1}.surface.visible(vr.LeftWallWhite(1) + ceil((1-vr.greyFac)*(vr.LeftWallWhite(2)-vr.LeftWallWhite(1))):vr.LeftWallWhite(2)) = 0;
                     vr.worlds{1}.surface.visible(vr.RightWallWhite(1) + ceil((1-vr.greyFac)*(vr.RightWallWhite(2)-vr.RightWallWhite(1))):vr.RightWallWhite(2)) = 0;
                     vr.worlds{1}.surface.visible(vr.LeftWallDelay(1) + ceil((1-vr.greyFac)*(vr.LeftWallDelay(2)-vr.LeftWallDelay(1))):vr.LeftWallDelay(2)) = 1;

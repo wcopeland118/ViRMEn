@@ -288,12 +288,12 @@ if vr.inITI == 1
         end
         
         %% problematic
-        length_temp = vr.backWallOriginal(2,:) - (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);
+        length_temp = eval( - (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);
         vr.worlds{1}.surface.vertices(2,vr.backWall(1):vr.backWall(2)) = vr.backWallCurrent;
         vr.worlds{1}.edges.endpoints(vr.edgeIndBackWall,[2,4]) = vr.backWallCurrent(1:2);
         vr.startLocationCurrent(2) = vr.backWallCurrent(1)+20;    
         
-        vr.exper.variables.wallLengthMin = num2str(length_temp);
+        vr.exper.variables.wallLengthMin = num2str(500-length_temp);
         vr.worlds{1} = loadVirmenWorld(vr.exper.worlds{1});
         vr.length = str2double(vr.exper.variables.wallLengthMin)+ (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);
         vr.worlds{1}.surface.visible(:) = 0;
@@ -310,9 +310,7 @@ vr.text(2).string = ['TRIALS ', num2str(vr.numTrials)];
 vr.text(3).string = ['REWARDS ',num2str(vr.numRewards)];
 vr.text(4).string = ['LENGTH ',num2str(vr.length)];
 
-
 fwrite(vr.fid,[rem(now,1) vr.position([1:2,4]) vr.velocity(1:2) vr.cuePos vr.isReward vr.inITI],'float');
-
 
 % --- TERMINATION code: executes after the ViRMEn engine stops.
 function vr = terminationCodeFun(vr)

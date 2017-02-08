@@ -228,9 +228,35 @@ if vr.inITI == 1
     if vr.itiTime > vr.itiDur
         vr.inITI = 0;
         
+        
+        vr.trialWindowLRZeros = vr.trialWindowLRChoice - vr.trialWindowLRAnswer;
+        vr.percentCorrect = sum(vr.trialWindowLRZeros==0)/length(vr.trialWindowLRAnswer);
+        
+        if toc(vr.trialTimer) < 20
+            vr.lengthFactor = vr.lengthFactor + vr.adjustmentFactor;
+        elseif toc(vr.trialTimer) > 20
+            vr.lengthFactor = vr.lengthFactor - vr.adjustmentFactor;
+        end
+        
+        if vr.lengthFactor > 1
+            vr.lengthFactor = 1;
+        elseif vr.lengthFactor <0
+            vr.lengthFactor = 0;
+        end
+        
+        length_temp = eval(vr.exper.variables.wallLengthMin) + (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);
+        vr.startLocationCurrent(2) = vr.worlds{1}.startLocation(2) - (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);
+        vr.exper.variables.wallLengthMin = num2str(length_temp);
+        vr.worlds{1} = loadVirmenWorld(vr.exper.worlds{1});
+        vr.length = str2double(vr.exper.variables.wallLengthMin)+ (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);    
+        vr.worlds{1}.surface.visible(:) = 0;
+        
+        vr.position = vr.startLocationCurrent;        
+        vr.dp = 0;
+        vr.trialTimer = tic;
         vr.worlds{1}.surface.visible(:) = 1;
         
-        vr.cuePos = randi(4);
+        vr.cuePos = randi([2 3],1);
         switch vr.cuePos
             case 1 %RightBlack
                 vr.worlds{1}.surface.visible(vr.cueWallRightWhite(1):vr.cueWallRightWhite(2))= 0;
@@ -271,37 +297,6 @@ if vr.inITI == 1
             otherwise
                 error('No World');
         end
-        
-        vr.trialWindowLRZeros = vr.trialWindowLRChoice - vr.trialWindowLRAnswer;
-        vr.percentCorrect = sum(vr.trialWindowLRZeros==0)/length(vr.trialWindowLRAnswer);
-        
-        if toc(vr.trialTimer) < 20
-            vr.lengthFactor = vr.lengthFactor + vr.adjustmentFactor;
-        elseif toc(vr.trialTimer) > 20
-            vr.lengthFactor = vr.lengthFactor - vr.adjustmentFactor;
-        end
-        
-        if vr.lengthFactor > 1
-            vr.lengthFactor = 1;
-        elseif vr.lengthFactor <0
-            vr.lengthFactor = 0;
-        end
-        
-        %% problematic
-        length_temp = vr.backWallOriginal(2,:) - (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);
-        vr.worlds{1}.surface.vertices(2,vr.backWall(1):vr.backWall(2)) = vr.backWallCurrent;
-        vr.worlds{1}.edges.endpoints(vr.edgeIndBackWall,[2,4]) = vr.backWallCurrent(1:2);
-        vr.startLocationCurrent(2) = vr.backWallCurrent(1)+20;    
-        
-        vr.exper.variables.wallLengthMin = num2str(length_temp);
-        vr.worlds{1} = loadVirmenWorld(vr.exper.worlds{1});
-        vr.length = str2double(vr.exper.variables.wallLengthMin)+ (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);
-        vr.worlds{1}.surface.visible(:) = 0;
-        %%
-        
-        vr.position = vr.startLocationCurrent;
-        vr.dp = 0;
-        vr.trialTimer = tic;
     end
 end
 
