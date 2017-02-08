@@ -52,23 +52,12 @@ if ~vr.debugMode
     daqreset; %reset DAQ in case it's still in use by a previous Matlab program
     vr.ai=daq.createSession('ni'); % connect to the DAQ card
     addAnalogInputChannel(vr.ai,'Dev1',0:2,'Voltage'); % start channels 0:2
-    
-             %     s = daq.createSession('ni');
-            %     s.addAnalogInputChannel('cDAQ1Mod1', 'ai0', 'Voltage');
-            %     lh = s.addlistener('DataAvailable', ...
-            %         @(src,event) plot(event.TimeStamps, event.Data));
-            %     s.startBackground();
-            %     delete(lh);
-    
-    vr.ai.Rate = 1e1; % ATK reduced this so Rate*Duration<8.5E9
+    vr.ai.Rate = 1e2; % ATK reduced this so Rate*Duration<8.5E9
     vr.ai.DurationInSeconds  = 1e7;
-    
-    lh = vr.ai.addlistener('DataAvailable',...
-        @(src,event) plot(event.TimeStamps, event.Data));
     vr.ai.startBackground();% start acquisition
-    delete(lh);
+
     addAnalogOutputChannel(vr.ao,'Dev1',0,'Current')
-    vr.ao.rate = 1e3;s
+    vr.ao.rate = 1e3;
 end
 
 %initialize counters

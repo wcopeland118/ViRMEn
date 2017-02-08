@@ -13,7 +13,7 @@ code.termination = @terminationCodeFun;
 % --- INITIALIZATION code: executes before the ViRMEN engine starts.
 function vr = initializationCodeFun(vr)
 
-vr.debugMode = false;
+vr.debugMode = true;
 vr.mouseNum = 999;
 vr.adjustmentFactor = 0.01;
 vr.lengthFactor = 0;
@@ -43,7 +43,7 @@ vr.edgeIndBackWall = vr.worlds{1}.objects.edges(vr.worlds{1}.objects.indices.bac
 vr.backWallEdges = vr.worlds{1}.edges.endpoints(vr.edgeIndBackWall,:);
 
 vr.backWallCurrent = vr.backWallOriginal(2,:);
-vr. = vr.startLocationCurrent;
+vr.position = vr.startLocationCurrent;
 vr.cuePos = 1;
 
 vr.inITI = 0;
@@ -55,7 +55,7 @@ vr.trialTimer = tic;
 
 % --- RUNTIME code: executes on every iteration of the ViRMEn engine.
 function vr = runtimeCodeFun(vr)
-if vr.inITI == 0 && abs(vr.(2)) > 485;
+if vr.inITI == 0 && abs(vr.position(2)) > 485;
             vr = giveReward(vr,1);
             vr.itiDur = vr.itiCorrect;
             vr.numRewards = vr.numRewards + 1;
@@ -120,7 +120,7 @@ vr.text(1).string = ['TIME ' datestr(now-vr.startTime,'HH.MM.SS')];
 vr.text(2).string = ['TRIALS ', num2str(vr.numTrials)];
 vr.text(3).string = ['REWARDS ',num2str(vr.numRewards)];
 
-fwrite(vr.fid,[rem(now,1) vr.([1:2,4]) vr.velocity(1:2) vr.cuePos vr.isReward vr.inITI],'float');
+fwrite(vr.fid,[rem(now,1) vr.position([1:2,4]) vr.velocity(1:2) vr.cuePos vr.isReward vr.inITI],'float');
 
 
 % --- TERMINATION code: executes after the ViRMEn engine stops.
