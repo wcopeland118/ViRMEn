@@ -13,10 +13,8 @@ code.termination = @terminationCodeFun;
 % --- INITIALIZATION code: executes before the ViRMEN engine starts.
 function vr = initializationCodeFun(vr)
 
-vr.debugMode = falser;
+vr.debugMode = false;
 vr.mouseNum = 999;
-vr.adjustmentFactor = 0.01;
-vr.lengthFactor = 0;
 
 %initialize important cell information
 vr.conds = {'Linear Track'};
@@ -35,14 +33,21 @@ vr.startLocationCurrent = vr.worlds{1}.startLocation;
 
 vr = initializePathVIRMEN(vr);
 
+vr.adjustmentFactor = 0.01;
 vr.minWallLength = eval(vr.exper.variables.wallLengthMin);
+vr.lengthFactor = 0;
+
 vr.backWallOriginal = vr.worlds{1}.surface.vertices(:,vr.backWall(1):vr.backWall(2));
 vr.wallLength = str2double(vr.exper.variables.wallLength);
+vr.length = str2double(vr.exper.variables.wallLengthMin);
 
 vr.edgeIndBackWall = vr.worlds{1}.objects.edges(vr.worlds{1}.objects.indices.backWall,1);
 vr.backWallEdges = vr.worlds{1}.edges.endpoints(vr.edgeIndBackWall,:);
 
-vr.backWallCurrent = vr.backWallOriginal(2,:);
+vr.backWallCurrent = vr.backWallOriginal(2,:) - (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);
+vr.worlds{1}.surface.vertices(2,vr.backWall(1):vr.backWall(2)) = vr.backWallCurrent;
+vr.worlds{1}.edges.endpoints(vr.edgeIndBackWall,[2,4]) = vr.backWallEdges([2,4]) - (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);
+vr.startLocationCurrent(2) = vr.worlds{1}.startLocation(2) - (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);
 vr.position = vr.startLocationCurrent;
 vr.cuePos = 1;
 
@@ -64,7 +69,7 @@ if vr.inITI == 0 && abs(vr.position(2)) > 485;
     vr.itiStartTime = tic;
     vr.inITI = 1;
     vr.numTrials = vr.numTrials + 1;
-    vr.cellWrite = false;
+    vr.cellWrite = true;
 else
     vr.isReward = 0;
 end
@@ -107,6 +112,7 @@ if vr.inITI == 1
         vr.startLocationCurrent(2) = vr.worlds{1}.startLocation(2) - (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);
         vr.exper.variables.wallLengthMin = num2str(length_temp);
         vr.worlds{1} = loadVirmenWorld(vr.exper.worlds{1});
+        vr.length = str2double(vr.exper.variables.wallLengthMin)+ (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);    
         vr.worlds{1}.surface.visible(:) = 0;
         
         vr.position = vr.startLocationCurrent;        
@@ -125,5 +131,4 @@ fwrite(vr.fid,[rem(now,1) vr.position([1:2,4]) vr.velocity(1:2) vr.cuePos vr.isR
 
 % --- TERMINATION code: executes after the ViRMEn engine stops.
 function vr = terminationCodeFun(vr)
-vr.exper.variables.wallLengthMin = num2str(vr.minWallLength);
 commonTerminationVIRMEN(vr);
