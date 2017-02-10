@@ -5,6 +5,7 @@ vr.text(1).string = '';
 vr.text(1).position = [1 .8];
 vr.text(1).size = .03;
 vr.text(1).color = [1 0 1];
+vr.text(1).window = 1; 
 
 vr.text(2).string = '';
 vr.text(2).position = [1 .7];

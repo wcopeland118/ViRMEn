@@ -1,15 +1,14 @@
-function [vr] = initializePathVIRMEN(vr)
-%INITIALIZEPATHVIRMEN This is a function to initialize virmen path
-%information run during the initialization block of all mazes
+function [vr] = initializePath_AK(vr)
+% Initialize virmen path information
 
 %initialize cell info
-vr.experimenter = 'LND';
+vr.experimenter = 'ATK';
 vr.mazeName = func2str(vr.exper.experimentCode);
 vr.exper.variables.mouseNumber = sprintf('%03d',vr.mouseNum); %save mouse num in exper 
 
 %set up path information
-path = ['C:\DATA\Laura\Current Mice\LD' sprintf('%03d',vr.mouseNum)];
-tempPath = 'C:\DATA\Laura\Temporary';
+path = ['C:\DATA\Aaron\Current Mice\LD' sprintf('%03d',vr.mouseNum)];
+tempPath = 'C:\DATA\Aaron\Temporary';
 if ~exist(tempPath,'dir')
     mkdir(tempPath);
 end
@@ -19,16 +18,16 @@ end
 vr.filenameTempMat = 'tempStorage.mat';
 vr.filenameTempMatCell = 'tempStorageCell.mat';
 vr.filenameTempDat = 'tempStorage.dat';
-vr.filenameMat = ['LD',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'.mat'];
-vr.filenameMatCell = ['LD',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_Cell.mat'];
-vr.filenameDat = ['LD',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'.dat'];
+vr.filenameMat = ['ATK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'.mat'];
+vr.filenameMatCell = ['ATK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_Cell.mat'];
+vr.filenameDat = ['ATK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'.dat'];
 fileIndex = 0;
 fileList = what(path);
 while sum(strcmp(fileList.mat,vr.filenameMat)) > 0
     fileIndex = fileIndex + 1;
-    vr.filenameMat = ['LD',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_',num2str(fileIndex),'.mat'];
-    vr.filenameMatCell = ['LD',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_Cell_',num2str(fileIndex),'.mat'];
-    vr.filenameDat = ['LD',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_',num2str(fileIndex),'.dat'];
+    vr.filenameMat = ['ATK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_',num2str(fileIndex),'.mat'];
+    vr.filenameMatCell = ['ATK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_Cell_',num2str(fileIndex),'.mat'];
+    vr.filenameDat = ['ATK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_',num2str(fileIndex),'.dat'];
     fileList = what(path);
 end
 exper = copyVirmenObject(vr.exper); %#ok<NASGU>
@@ -44,6 +43,8 @@ vr.fid = fopen(vr.pathTempDat,'w');
 %save tempFile
 save(vr.pathTempMatCell,'-struct','vr','conds');
 
+%{
+
 %initialize reward arm depth
 vr.armFac = 3; %armLength/armFac is where reward is given
 
@@ -52,12 +53,23 @@ if ~vr.debugMode
     daqreset; %reset DAQ in case it's still in use by a previous Matlab program
     vr.ai=daq.createSession('ni'); % connect to the DAQ card
     addAnalogInputChannel(vr.ai,'Dev1',0:2,'Voltage'); % start channels 0:2
-    vr.ai.Rate = 1e2; % ATK reduced this so Rate*Duration<8.5E9
+    
+             %     s = daq.createSession('ni');
+            %     s.addAnalogInputChannel('cDAQ1Mod1', 'ai0', 'Voltage');
+            %     lh = s.addlistener('DataAvailable', ...
+            %         @(src,event) plot(event.TimeStamps, event.Data));
+            %     s.startBackground();
+            %     delete(lh);
+    
+    vr.ai.Rate = 1e1; % ATK reduced this so Rate*Duration<8.5E9
     vr.ai.DurationInSeconds  = 1e7;
+    
+    lh = vr.ai.addlistener('DataAvailable',...
+        @(src,event) plot(event.TimeStamps, event.Data));
     vr.ai.startBackground();% start acquisition
-
+    delete(lh);
     addAnalogOutputChannel(vr.ao,'Dev1',0,'Current')
-    vr.ao.rate = 1e3;
+    vr.ao.rate = 1e3;s
 end
 
 %initialize counters
@@ -97,5 +109,7 @@ vr.text(5).string = '';
 vr.text(5).position = [1 .4];
 vr.text(5).size = .02;
 vr.text(5).color = [1 0 0];
+%}
+
 end
 
