@@ -1,4 +1,4 @@
-function [vr] = giveReward(vr,nRew)
+function [vr] = giveReward_AK(vr,nRew)
 %giveReward Function which delivers rewards using the Master-8 system
 %(instantaneous pulses)
 %   nRew - number of rewards to deliver

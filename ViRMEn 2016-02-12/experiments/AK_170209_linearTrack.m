@@ -13,7 +13,7 @@ code.termination = @terminationCodeFun;
 function vr = initializationCodeFun(vr)
 
 % set parameters
-vr.debugMode = true;
+vr.debugMode = false;
 vr.mouseNum = 999;
 vr.adjustmentFactor = 0.01;
 vr.lengthFactor = 0;
@@ -60,6 +60,13 @@ vr.trialTimer = tic;
 
 % --- RUNTIME code: executes on every iteration of the ViRMEn engine.
 function vr = runtimeCodeFun(vr)
+
+% Deliver reward if 'r' key pressed
+manualReward = vr.keyPressed == 82; %'r' key
+if manualReward
+    vr.numRewards = vr.numRewards + 1;
+    vr = giveReward_AK(vr,1);
+end
 
 % check for reward / end of trial
 if vr.inITI == 0 && abs(vr.position(2)) > 485

@@ -11,7 +11,7 @@ end
 % Teensy can send voltage between 0 and 3.3V, so that ~1.65 V 
 % corresponds to no movement. This voltage needs calibration 
 % because there is subtle fluctuations from day to day.
-data = mean(mvData(:,2:end)) - [1.6426    1.6427    1.6433];
+data = mean(mvData(:,2:end)) - [1.705452, 1.703499, 1.705461] ;
 
 % data
 % 1: roll

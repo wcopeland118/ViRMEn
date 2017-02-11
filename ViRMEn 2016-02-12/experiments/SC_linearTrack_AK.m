@@ -1,4 +1,4 @@
-function code = SC_linearTrack
+function code = SC_linearTrack_AK
 % Linear Track   Code for the ViRMEn experiment Linear Track.
 %   code = Linear Track   Returns handles to the functions that ViRMEn
 %   executes during engine initialization, runtime and termination.
@@ -46,7 +46,7 @@ manualReward = vr.keyPressed == 82; %'r' key
 if manualReward
     vr.behaviorData(9,vr.trialIterations) = 1;
     vr.numRewards = vr.numRewards + 1;
-    vr = giveReward(vr,1);
+    vr = giveReward_AK(vr,1);
 end
 
 % check for trial-terminating position and deliver reward
@@ -62,7 +62,7 @@ if vr.inITI == 0 && (vr.position(2) > vr.mazeLength + 5);
     if vr.rewDelayTime > vr.rewardDelay   
         vr.behaviorData(9,vr.trialIterations) = 1;
         vr.numRewards = vr.numRewards + 1;
-        vr = giveReward(vr,1);
+        vr = giveReward_AK(vr,1);
         vr.itiDur = vr.itiCorrect;
         vr = endVRTrial(vr);
     else
