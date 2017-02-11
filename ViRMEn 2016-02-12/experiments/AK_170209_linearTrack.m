@@ -71,7 +71,7 @@ if vr.inITI == 0 && abs(vr.position(2)) > 485
     vr.itiStartTime = tic;
     vr.inITI = 1;
     vr.numTrials = vr.numTrials + 1;
-    vr.cellWrite = false;
+    vr.cellWrite = true;
 else
     vr.isReward = 0;
 end
@@ -80,10 +80,11 @@ end
 if vr.inITI == 1
     % save data once per ITI
     if vr.cellWrite
-        [dataStruct] = createSaveStruct(vr.mouseNum,vr.experimenter,...
-            vr.conds,vr.whiteMazes,vr.leftMazes,vr.mazeName,vr.cuePos,vr.leftMazes(vr.cuePos),...
-            vr.whiteMazes(vr.cuePos),vr.isReward,vr.itiCorrect,vr.itiMiss,vr.isReward ~= 0,vr.leftMazes(vr.cuePos)==(vr.isReward~=0),...
-            vr.whiteMazes(vr.cuePos)==(vr.isReward~=0),vr.streak,vr.trialStartTime,rem(now,1),vr.startTime); %#ok<NASGU>
+%         [dataStruct] = createSaveStruct(vr.mouseNum,vr.experimenter,...
+%             vr.conds,vr.whiteMazes,vr.leftMazes,vr.mazeName,vr.cuePos,vr.leftMazes(vr.cuePos),...
+%             vr.whiteMazes(vr.cuePos),vr.isReward,vr.itiCorrect,vr.itiMiss,vr.isReward ~= 0,vr.leftMazes(vr.cuePos)==(vr.isReward~=0),...
+%             vr.whiteMazes(vr.cuePos)==(vr.isReward~=0),vr.streak,vr.trialStartTime,rem(now,1),vr.startTime); %#ok<NASGU>
+        dataStruct=struct('mouseNum',vr.mouseNum);
         eval(['data',num2str(vr.numTrials),'=dataStruct;']);
         %save datastruct
         if exist(vr.pathTempMatCell,'file')

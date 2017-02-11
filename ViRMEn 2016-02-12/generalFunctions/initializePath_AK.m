@@ -7,7 +7,11 @@ vr.mazeName = func2str(vr.exper.experimentCode);
 vr.exper.variables.mouseNumber = sprintf('%03d',vr.mouseNum); %save mouse num in exper 
 
 %set up path information
-path = ['C:\DATA\Aaron\Current Mice\LD' sprintf('%03d',vr.mouseNum)];
+if vr.debugMode
+    path = ['C:\DATA\Aaron\Debug\Debug_' datestr(now,'yymmdd')];
+else
+    path = ['C:\DATA\Aaron\Current Mice\AK' sprintf('%03d',vr.mouseNum)];
+end
 tempPath = 'C:\DATA\Aaron\Temporary';
 if ~exist(tempPath,'dir')
     mkdir(tempPath);

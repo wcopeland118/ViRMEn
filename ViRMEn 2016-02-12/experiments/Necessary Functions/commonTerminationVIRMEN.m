@@ -3,8 +3,9 @@ function [vr] = commonTerminationVIRMEN(vr)
 %information for every virmen maze
 
 fclose(vr.fid);
-if vr.numTrials ~= 0 && vr.cellWrite
-    [dataCell] = catCells(vr.pathTempMatCell,'data'); %#ok<NASGU>
+if vr.numTrials ~= 0 %&& vr.cellWrite
+    %[dataCell] = catCells(vr.pathTempMatCell,'data'); %#ok<NASGU>
+    dataCell = load(vr.pathTempMatCell);
     save(vr.pathMatCell,'dataCell');
     delete(vr.pathTempMatCell);
 end
