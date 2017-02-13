@@ -18,8 +18,7 @@ vr.mouseNum = 999;
 vr.adjustmentFactor = 0.01;
 vr.lengthFactor = 0;
 vr.trialTimeout = 60;
-vr.itiDur = 1;
-            
+
 % experimental condition labeel
 vr.conds = {'Linear Track'};
 
@@ -56,6 +55,7 @@ switch vr.STATE
         % check for sucessful completion of trial
         if vr.position(2) > 485
             vr = giveReward_AK(vr,1);
+            vr.itiDur = vr.itiCorrect; %?
             vr.numRewards = vr.numRewards + 1;
             vr.numTrials = vr.numTrials + 1;
             vr.success = 1;
@@ -74,15 +74,15 @@ switch vr.STATE
             % save previous trial data
             
             % Summary: Success | Trial Time 
-            % One cell per trial
-            dataStruct=struct('success',vr.success,'trialTime',vr.trialTime,...
-                'pathLength',vr.exper.variables.wallLengthMin);
-            eval(['trial',num2str(vr.numTrials),'=dataStruct;']);
+            
+            
+            dataStruct=struct('success',vr.success,'trialTime',vr.trialTime);
+            eval(['data',num2str(vr.numTrials),'=dataStruct;']);
             % save to temp .mat file
             if exist(vr.pathTempMatCell,'file')
-                save(vr.pathTempMatCell,['trial',num2str(vr.numTrials)],'-append');
+                save(vr.pathTempMatCell,['data',num2str(vr.numTrials)],'-append');
             else
-                save(vr.pathTempMatCell,['trial',num2str(vr.numTrials)]);
+                save(vr.pathTempMatCell,['data',num2str(vr.numTrials)]);
             end
             vr.STATE = 'ITI';
     case 'ITI'
