@@ -13,7 +13,7 @@ code.termination = @terminationCodeFun;
 function vr = initializationCodeFun(vr)
 
 % set parameters
-vr.debugMode = true;
+vr.debugMode = false;
 vr.mouseNum = 999;
 vr.adjustmentFactor = 0.01;
 vr.lengthFactor = 0;
@@ -60,7 +60,9 @@ vr = updateTextDisplay_AK(vr);
 switch vr.STATE
     case 'TRIAL'
         % check for sucessful completion of trial
-        if vr.position(2) > 485
+        
+        vr.faceBackwards = vr.position(4) > 3.14/2 && vr.position(4) < 3*3.14/2;  
+        if vr.position(2) > 485 && ~vr.faceBackwards
             vr = giveReward_AK(vr,1);
             vr.numRewards = vr.numRewards + 1;
             vr.numTrials = vr.numTrials + 1;
