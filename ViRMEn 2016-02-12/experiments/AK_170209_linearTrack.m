@@ -33,7 +33,7 @@ vr = initCounters_AK(vr);
 
 vr.minWallLength = eval(vr.exper.variables.wallLengthMin);
 vr.wallLength = str2double(vr.exper.variables.wallLength);
-vr.startLocation = [0,470,-60,0];
+vr.startLocation = [0,470,-60,0.01];
 vr.startLocationCurrent = vr.startLocation;
 % front wall is at 500
 % 460+10 to accomodate edge radius of 9.9
