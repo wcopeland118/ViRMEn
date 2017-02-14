@@ -30,9 +30,15 @@ vr = initDAQ_AK(vr); % NI-DAQ, session based
 vr = initCounters_AK(vr); 
 
 % Initialize world object handles
-vr.startLocationCurrent = vr.worlds{1}.startLocation; 
+
 vr.minWallLength = eval(vr.exper.variables.wallLengthMin);
 vr.wallLength = str2double(vr.exper.variables.wallLength);
+vr.startLocation = [0,470,-60,0];
+vr.startLocationCurrent = vr.startLocation;
+% front wall is at 500
+% 460+10 to accomodate edge radius of 9.9
+% vr.worlds{1}.startLocation;
+% startLocation is buried in linearTrack.mat:exper.worlds.startLocation
 
 % experiment start parameters
 vr.position = vr.startLocationCurrent;
@@ -107,10 +113,12 @@ switch vr.STATE
             end
             
             % set up world
-
-            length_temp = eval(vr.exper.variables.wallLengthMin) + (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);
-            vr.startLocationCurrent(2) = vr.worlds{1}.startLocation(2) - (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);
-            vr.exper.variables.wallLengthMin = num2str(length_temp);
+            % ATK - not happy with this, but a quick fix isn't easy
+            length_temp = vr.minWallLength + (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);
+            vr.startLocationCurrent(2) = vr.startLocation(2) - (vr.lengthFactor)*(vr.wallLength - vr.minWallLength);
+            vr.exper.variables.wallLengthMin = num2str(length_temp); %this actually changes the back wall
+            % note that vr.minWallLength is always 40, even though the
+            % exper var changes
             vr.worlds{1} = loadVirmenWorld(vr.exper.worlds{1});
             vr.worlds{1}.surface.visible(:) = 0;
             vr.position = vr.startLocationCurrent;
