@@ -111,8 +111,8 @@ switch vr.STATE
             % but always within bounds 
             if vr.lengthFactor > 1
                 vr.lengthFactor = 1;
-            elseif vr.lengthFactor <vr.minLength	# SAK 02162017 -- added a variable to control minimum maze length 
-                vr.lengthFactor = vr.minLength;		# SAK 02162017 
+            elseif vr.lengthFactor <vr.minLength	% SAK 02162017 -- added a variable to control minimum maze length 
+                vr.lengthFactor = vr.minLength;		% SAK 02162017 
             end
             
             % set up world
