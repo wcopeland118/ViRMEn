@@ -1,4 +1,4 @@
-function vr = initDAQ(vr)
+function vr = initDAQ_AK(vr)
 % Start the DAQ acquisition
 % analog out data is sent to mvData
 if ~vr.debugMode
