@@ -33,7 +33,7 @@ velocity(1) = -alpha*mvDataNorm(2)*sin(vr.position(4));
 velocity(2) = alpha*mvDataNorm(2)*cos(vr.position(4));
 %}
 
-% use yaw and pitch only
+% use roll, yaw and pitch only
 beta = 0.01*circum/V;
 velocity(1) = -alpha*(mvDataNorm(2)*sin(vr.position(4))-mvDataNorm(1)*cos(vr.position(4)));
 velocity(2) = alpha*(mvDataNorm(2)*cos(vr.position(4))+mvDataNorm(1)*sin(vr.position(4)));

@@ -16,8 +16,7 @@ function vr = initializationCodeFun(vr)
 vr.debugMode = false;
 vr.mouseNum = 999;
 vr.adjustmentFactor = 0.01;
-vr.minLength = 0.05;			% SAK 02172017 - sets minimum maze length
-vr.lengthFactor = vr.minLength;		% SAK 02172017 - initializes to minimum length
+vr.lengthFactor = 0;
 vr.trialTimeout = 60;
 vr.itiDur = 1;
             
@@ -72,6 +71,7 @@ switch vr.STATE
             vr.STATE = 'INIT_ITI';            
         elseif toc(vr.trialTimer) > vr.trialTimeout
             vr.STATE = 'INIT_ITI';
+            vr.numTrials = vr.numTrials + 1;
             vr.trialTime = vr.trialTimeout;
             vr.success = 0;
         end
@@ -111,8 +111,8 @@ switch vr.STATE
             % but always within bounds 
             if vr.lengthFactor > 1
                 vr.lengthFactor = 1;
-            elseif vr.lengthFactor <vr.minLength	% SAK 02162017 -- added a variable to control minimum maze length 
-                vr.lengthFactor = vr.minLength;		% SAK 02162017 
+            elseif vr.lengthFactor < 0
+                vr.lengthFactor = 0;
             end
             
             % set up world
