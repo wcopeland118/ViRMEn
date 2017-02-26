@@ -17,6 +17,7 @@ vr.adjustmentFactor = 0.01;
 vr.lengthFactor = 0;
 vr.trialTimeout = 60;
 vr.itiDur = 1;
+% vr.friction = 0.3; % define friction that will reduce velocity by 70% during collisions
 
 % experimental condition labeel
 vr.conds = {'tExtending'};
@@ -91,6 +92,19 @@ switch vr.STATE
                 vr.STATE = 'INIT_ITI';
         end
     
+%         if vr.collision % test if the animal is currently in collision
+%             % reduce the x and y components of displacement
+%             vr.dp(1:2) = vr.dp(1:2) * vr.friction;
+%         end
+
+        % Decrease velocity by friction coefficient (can be zero)
+        if vr.collision
+            % Friction is proportional to the velocity parpendicular to the wall (i.e. x velocity)
+            theta = atan(vr.position(2)/vr.position(1));
+            vr.dp(1) = 0;
+            vr.dp(2) = vr.dp(2) * abs(sin(theta)).^10;
+        end
+        
         if vr.cuePos == 1
            vr.isStimR = 1;   % 1(true) if stimulus was R  
         end
