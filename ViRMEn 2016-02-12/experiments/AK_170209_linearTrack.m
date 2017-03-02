@@ -14,6 +14,7 @@ function vr = initializationCodeFun(vr)
 
 % set parameters
 vr.debugMode = false;
+vr.mouseNum = 999;
  vr.friction = 0.3;
 vr.adjustmentFactor = 0.01;
 vr.lengthFactor = 0;		
