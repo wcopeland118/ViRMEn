@@ -12,11 +12,11 @@ function vr = initializationCodeFun(vr)
 
 % set parameters
 vr.debugMode = false;
-vr.mouseNum = 002;
+vr.mouseNum = 003;
 vr.adjustmentFactor = 0.01;
 vr.lengthFactor = 0;
 vr.trialTimeout = 120;
-vr.itiDur = 1;
+vr.itiDur = 5;  % increased itiDur from 1 to 3 to discourage initial running of mice at start
 vr.friction = 0.3; % define friction that will reduce velocity by 70% during collisions
 
 % experimental condition labeel
