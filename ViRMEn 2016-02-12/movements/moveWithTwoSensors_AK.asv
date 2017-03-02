@@ -1,4 +1,4 @@
-function velocity = moveWithTwoSensors(vr)
+function velocity = moveWithTwoSensors_AK(vr)
 %global mvData
 global mvData
 velocity = [0 0 0 0];
@@ -19,9 +19,10 @@ mvDataNorm = mvData - [1.705452, 1.703499, 1.705461];
 % 3: yaw
 
 % Update velocity
-V = 0.32; % integral of voltage over one rotation of the ball
+V = 0.32; % integral of voltage over one rotation of the ball (invariant with time) unit = V*s
 circum = 64; % circumference of the ball 
 % 100 unit is defined as 75 cm
+%alpha = -100/75/V; % does it need circumference?
 alpha = -100/75*circum/V;
 flip = 0; % set to 1 if the mirror flips right and left in Virmen 
 
@@ -33,12 +34,13 @@ velocity(1) = -alpha*mvDataNorm(2)*sin(vr.position(4));
 velocity(2) = alpha*mvDataNorm(2)*cos(vr.position(4));
 %}
 
-% use yaw and pitch only
+% use roll, yaw and pitch only
 beta = 0.01*circum/V;
-velocity(1) = -alpha*(mvDataNorm(2)*sin(vr.position(4));
-velocity(2) = alpha*mvDataNorm(2)*cos(vr.position(4));
+velocity(1) = -alpha*(mvDataNorm(2)*sin(vr.position(4))-mvDataNorm(1)*cos(vr.position(4)));
+velocity(2) = alpha*(mvDataNorm(2)*cos(vr.position(4))+mvDataNorm(1)*sin(vr.position(4)));
 
 velocity(4) = beta*mvDataNorm(3);
+
 if flip
     velocity(4) = -beta*mvDataNorm(1);
 end

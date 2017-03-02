@@ -14,9 +14,9 @@ function vr = initializationCodeFun(vr)
 
 % set parameters
 vr.debugMode = false;
-vr.mouseNum = 999;
+ vr.friction = 0.3;
 vr.adjustmentFactor = 0.01;
-vr.lengthFactor = 0;
+vr.lengthFactor = 0;		
 vr.trialTimeout = 60;
 vr.itiDur = 1;
             
@@ -72,8 +72,22 @@ switch vr.STATE
         elseif toc(vr.trialTimer) > vr.trialTimeout
             vr.STATE = 'INIT_ITI';
             vr.trialTime = vr.trialTimeout;
+            vr.numTrials = vr.numTrials + 1;
             vr.success = 0;
         end
+        if vr.collision % test if the animal is currently in collision
+            % reduce the x and y components of displacement
+            vr.dp(1:2) = vr.dp(1:2) * vr.friction;
+        end
+
+%         % Decrease velocity by friction coefficient (can be zero)
+%         if vr.collision
+%             % Friction is proportional to the velocity parpendicular to the wall (i.e. x velocity)
+%             theta = atan(vr.position(2)/vr.position(1));
+%             vr.dp(1) = 0;
+%             vr.dp(2) = vr.dp(2) * abs(sin(theta)).^10;
+%         end
+        
     case 'INIT_ITI'   
             % blackout screen and start timer
             vr.worlds{1}.surface.visible(:) = 0;
@@ -110,8 +124,8 @@ switch vr.STATE
             % but always within bounds 
             if vr.lengthFactor > 1
                 vr.lengthFactor = 1;
-            elseif vr.lengthFactor <0
-                vr.lengthFactor = 0;
+            elseif vr.lengthFactor <0	
+                vr.lengthFactor = 0;		
             end
             
             % set up world
