@@ -12,7 +12,8 @@ ai.NotifyWhenDataAvailableExceeds=1e3;
 ai.IsContinuous=1;
 aiListener = ai.addlistener('DataAvailable', @avgMvData);
 startBackground(ai),
-
+pause(1);
+stop(ai);
 end
 
 function avgMvData(src,event)
