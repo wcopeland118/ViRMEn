@@ -14,12 +14,12 @@ function vr = initializationCodeFun(vr)
 
 % set parameters
 vr.debugMode = false;
-vr.mouseNum = 999;
- vr.friction = 0.3;
+vr.mouseNum = 002;
+vr.friction = 0.3;
 vr.adjustmentFactor = 0.01;
 vr.lengthFactor = 0;		
-vr.trialTimeout = 60;
-vr.itiDur = 1;
+vr.trialTimeout = 120;
+vr.itiDur = 2;
             
 % experimental condition labeel
 vr.conds = {'Linear Track'};
@@ -34,7 +34,7 @@ vr = initCounters_AK(vr);
 
 vr.minWallLength = eval(vr.exper.variables.wallLengthMin);
 vr.wallLength = str2double(vr.exper.variables.wallLength);
-vr.startLocation = [0,470,-60,0.01];
+vr.startLocation = [0,vr.wallLength-vr.minWallLength+10,-60,0.01];
 vr.startLocationCurrent = vr.startLocation;
 % front wall is at 500
 % 460+10 to accomodate edge radius of 9.9
