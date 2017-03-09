@@ -30,10 +30,17 @@ vr = initDAQ_AK(vr); % NI-DAQ, session based
 vr = initCounters_AK(vr); 
 
 % Initialize world object handles
-vr.startLocationCurrent = vr.worlds{1}.startLocation; 
+
+% vr.startLocationCurrent = vr.worlds{1}.startLocation; 
+
+% 85 virmen units is one full rotation of the ball
+vr.exper.variables.wallLengthMin = num2str(95);
+
 vr.minWallLength = eval(vr.exper.variables.wallLengthMin);
 vr.wallLength = str2double(vr.exper.variables.wallLength);
 
+vr.startLocation = [0,vr.wallLength-85,-60,0.01];
+vr.startLocationCurrent = vr.startLocation;
 % experiment start parameters
 vr.position = vr.startLocationCurrent;
 vr.cuePos = 1;
