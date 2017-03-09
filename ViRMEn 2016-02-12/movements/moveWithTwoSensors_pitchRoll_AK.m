@@ -11,7 +11,7 @@ end
 % Teensy can send voltage between 0 and 3.3V, so that ~1.65 V 
 % corresponds to no movement. This voltage needs calibration 
 % because there is subtle fluctuations from day to day.
-mvDataNorm = mvData - [1.705452, 1.703499, 1.705461]; 
+mvDataNorm = mvData - [1.703946, 1.701068, 1.736673] ; 
 
 % mvData
 % 1: roll
@@ -19,10 +19,14 @@ mvDataNorm = mvData - [1.705452, 1.703499, 1.705461];
 % 3: yaw
 
 % Update velocity
-V = 0.32; % integral of voltage over one rotation of the ball
+
+V = 0.33; % integral of voltage over one rotation of the ball
+
 circum = 64; % circumference of the ball 
+%calibrated AK 170308
+gain = 1.25; % basically a fudge factor
 % 100 unit is defined as 75 cm
-alpha = -100/75*circum/V;
+alpha = -100/75*gain*circum/V;
 flip = 1; % set to 1 if the mirror flips right and left in Virmen 
 
 %{
@@ -49,7 +53,7 @@ velocity(2) = alpha*mvDataNorm(2)*cos(vr.position(4));
 % use roll and pitch only
 alpha = -100/75*circum/V;
 beta = 0.01*circum/V;
-velocity(1) = alpha*mvDataNorm(2)*sin(vr.position(4));
+velocity(1) = -alpha*mvDataNorm(2)*sin(vr.position(4));
 velocity(2) = alpha*mvDataNorm(2)*cos(vr.position(4));
 velocity(4) = beta*mvDataNorm(1);
 if flip
