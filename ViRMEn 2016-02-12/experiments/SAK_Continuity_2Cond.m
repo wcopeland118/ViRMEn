@@ -1,4 +1,4 @@
-function code = Continuity_2Cond
+function code = SAK_Continuity_2Cond
 % Continuity   Code for the ViRMEn experiment Continuity.
 %   code = Continuity Returns handles to the functions that ViRMEn
 %   executes during engine initialization, runtime and termination.
