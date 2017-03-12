@@ -1,6 +1,6 @@
 function vr = updateTextDisplay_AK(vr)
 
-vr.text(1).string = ['TIME: ' datestr(now-vr.timeStarted,'MM.SS')];
+vr.text(1).string = ['TIME: ' datestr(now-vr.startTime,'MM.SS')];
 vr.text(2).string = ['TRIALS: ' num2str(vr.numTrials)];
 vr.text(3).string = ['REWARDS: ' num2str(vr.numRewards)];
 if vr.numTrials > 0
