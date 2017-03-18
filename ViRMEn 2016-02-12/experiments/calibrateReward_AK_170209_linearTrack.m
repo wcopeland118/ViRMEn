@@ -69,7 +69,7 @@ vr = updateTextDisplay_AK(vr);
 switch vr.STATE
     case 'TRIAL'
         % check for sucessful completion of trial
-        if vr.position(2) > 485
+        if vr.position(2) > vr.wallLength - 15
             vr = giveReward_AK(vr,1);
             vr.numRewards = vr.numRewards + 1;
             vr.numTrials = vr.numTrials + 1;

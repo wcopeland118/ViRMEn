@@ -13,11 +13,11 @@ code.termination = @terminationCodeFun;
 function vr = initializationCodeFun(vr)
 
 % set parameters
-vr.debugMode = true;
-vr.mouseNum = 999;
+vr.debugMode = false;
+vr.mouseNum = 001;
 vr.adapSpeed = 20;
 vr.trialTimeout = 120;
-vr.itiDur = 2;  % increased itiDur from 1 to 3 to discourage initial running of mice at start
+vr.itiDur = 1.5;  % increased itiDur from 1 to 3 to discourage initial running of mice at start
 vr.friction = 0.3; % define friction that will reduce velocity by 70% during collisions
 
 % experimental condition labeel
@@ -73,13 +73,13 @@ whiteLeftTower = vr.WhiteLeftTower(1):vr.WhiteLeftTower(2);
 %whiteRightTower = vr.WhiteRightTower(1):vr.WhiteRightTower(2);
 blackRightTower = vr.BlackRightTower(1):vr.BlackRightTower(2);
 
-%vr.blackLeft = [beginBlack whiteRight blackLeftTower whiteRightTower backBlack];
+vr.blackLeft = [beginBlack whiteRight blackLeftTower whiteRightTower backBlack];
 
 vr.blackRight = [beginBlack whiteLeft blackRightTower whiteLeftTower backBlack];
 
 vr.whiteLeft = [beginWhite whiteLeft backWhite whiteLeftTower blackRightTower];
 
-%vr.whiteRight = [beginWhite whiteRight backWhite blackLeftTower whiteRightTower];
+vr.whiteRight = [beginWhite whiteRight backWhite blackLeftTower whiteRightTower];
 
 
 
