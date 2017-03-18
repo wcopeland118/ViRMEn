@@ -12,7 +12,7 @@ function vr = initializationCodeFun(vr)
 
 % set parameters
 vr.debugMode = false;
-vr.mouseNum = 003;
+vr.mouseNum = 999;
 vr.adjustmentFactor = 0.01;
 vr.lengthFactor = 0;
 vr.trialTimeout = 120;
