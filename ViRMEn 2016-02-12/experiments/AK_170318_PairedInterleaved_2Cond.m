@@ -116,8 +116,8 @@ vr = updateTextDisplay_AK(vr);
 if vr.inITI == 0 && abs(vr.position(1)) > eval(vr.exper.variables.armLength)/2 &&...
         vr.position(2) > eval(vr.exper.variables.MazeLengthAhead) % if in an arm
     if vr.position(1) < 0 && ismember(vr.currentCueWorld,[5 6]) % left turn, worlds 5&6
+        vr.isReward=1;
         if vr.currentCueWorld == 1 || vr.currentCueWorld == 5
-            vr.isReward=1;
             vr = giveReward_AK(vr,1);
             vr.whichWorldFlag = vr.currentCueWorld + 1;
             vr.numRewardsTower = vr.numRewardsTower + 1;
@@ -129,7 +129,6 @@ if vr.inITI == 0 && abs(vr.position(1)) > eval(vr.exper.variables.armLength)/2 &
             elseif vr.mulRewards >= 2
                 vr = giveReward_AK(vr,3);
             end
-            vr.isReward=1;
             vr.whichWorldFlag = 0;
             vr.numRewardsNoTower = vr.numRewardsNoTower + 1;
         end
@@ -137,7 +136,8 @@ if vr.inITI == 0 && abs(vr.position(1)) > eval(vr.exper.variables.armLength)/2 &
         vr.trialResults(1,size(vr.trialResults,2)+1) = 1;
         vr.streak = vr.streak + 1;
     elseif  vr.position(1) > 0 && ismember(vr.currentCueWorld,[3 4]) % right turn, worlds 3&4
-       if vr.currentCueWorld == 3 || vr.currentCueWorld == 7
+        vr.isReward=1;
+        if vr.currentCueWorld == 3 || vr.currentCueWorld == 7
             vr = giveReward_AK(vr,1);
             vr.whichWorldFlag = vr.currentCueWorld + 1;
             vr.numRewardsTower = vr.numRewardsTower + 1;
@@ -149,7 +149,6 @@ if vr.inITI == 0 && abs(vr.position(1)) > eval(vr.exper.variables.armLength)/2 &
             elseif vr.mulRewards >= 2
                 vr = giveReward_AK(vr,3);
             end
-            vr.isReward=1;
             vr.whichWorldFlag = 0;
             vr.numRewardsNoTower = vr.numRewardsNoTower + 1;
         end
