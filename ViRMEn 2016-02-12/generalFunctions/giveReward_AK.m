@@ -6,6 +6,8 @@ function [vr] = giveReward_AK(vr,nRew)
 sinDur = .051; %Calibrated every day to give 1 mL for 250 rewards
 % equiv to 4 uL each.
 
+disp(['Reward Given at ' datestr(now, 'HH:MM:SS')]);
+
 if ~vr.debugMode
     actualRate = vr.ao.Rate; %get sample rate
     pulselength=round(actualRate*sinDur*nRew); %find duration (rate*duration in seconds *numRew)
