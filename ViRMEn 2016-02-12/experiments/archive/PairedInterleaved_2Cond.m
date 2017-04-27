@@ -13,7 +13,7 @@ code.termination = @terminationCodeFun;
 % --- INITIALIZATION code: executes before the ViRMEN engine starts.
 function vr = initializationCodeFun(vr)
 
-vr.debugMode = true;
+vr.debugMode = false;
 vr.mouseNum = 999;
 
 vr.mulRewards = 1;
@@ -82,16 +82,12 @@ vr.whiteRightTower = [beginWhite whiteRight backWhite whiteRightTower];
 vr.whiteRightNoTower = [beginWhite whiteRight  blackLeftTower whiteRightTower backWhite];
 
 vr.worlds{1}.surface.visible(:) = 0;
-vr.currentCueWorld = 1+2*randi([1 2]);
+vr.currentCueWorld = randi([3 5]);
 switch vr.currentCueWorld
-    case 1
-        vr.worlds{1}.surface.visible(vr.blackLeftTower) = 1;
     case 3
         vr.worlds{1}.surface.visible(vr.blackRightTower) = 1;
     case 5
         vr.worlds{1}.surface.visible(vr.whiteLeftTower) = 1;
-    case 7
-        vr.worlds{1}.surface.visible(vr.whiteRightTower) = 1;
     otherwise
         display('No World');
         return;
@@ -103,64 +99,43 @@ vr.numTrialsNoTower = 0;
 vr.numRewardsNoTower = 0;
 vr.numRewardsTower = 0;
 
-vr.iterationNum=0;
-if ~vr.debugMode
-    putsample(vr.aoCOUNT,-5); %count is -5 inbetween count 'ticks'
-end
-
 % --- RUNTIME code: executes on every iteration of the ViRMEn engine.
 function vr = runtimeCodeFun(vr)
 
-if ~vr.debugMode
-    if vr.iterationNum == 1
-        putsample(vr.aoCOUNT,10),
-    elseif mod(vr.iterationNum,1e4)==0
-        putsample(vr.aoCOUNT,vr.iterationNum/1e5),
-    else
-        putsample(vr.aoCOUNT,-1),
-    end
-end
-vr.iterationNum=vr.iterationNum+1;
 if vr.inITI == 0 && abs(vr.position(1)) > eval(vr.exper.variables.armLength)/2 &&...
         vr.position(2) > eval(vr.exper.variables.MazeLengthAhead)
-    if vr.position(1) < 0 && ismember(vr.currentCueWorld,[1 2 5 6])
+    if vr.position(1) < 0 && ismember(vr.currentCueWorld,[5 6])
         if vr.currentCueWorld == 1 || vr.currentCueWorld == 5
             vr = giveReward(vr,1);
             vr.whichWorldFlag = vr.currentCueWorld + 1;
             vr.numRewardsTower = vr.numRewardsTower + 1;
         elseif vr.currentCueWorld == 2 || vr.currentCueWorld == 6
-        if ~vr.debugMode
-            wait(vr.aoCOUNT,1); %Make sure iteration num is sent before giving reward to prevent AO conflicts
-            if vr.streak == 0 || vr.mulRewards == 0
+            if vr.mulRewards == 0
                 vr = giveReward(vr,1);
-            elseif (vr.streak == 1 && vr.mulRewards == 2) || (vr.streak >= 1 && vr.mulRewards == 1)
+            elseif vr.mulRewards == 1
                 vr = giveReward(vr,2);
-            elseif vr.streak >= 2 && vr.mulRewards >= 2
+            elseif vr.mulRewards >= 2
                 vr = giveReward(vr,3);
             end
-        end
             vr.whichWorldFlag = 0;
             vr.numRewardsNoTower = vr.numRewardsNoTower + 1;
         end
         vr.itiDur = vr.itiCorrect;
         vr.trialResults(1,size(vr.trialResults,2)+1) = 1;
         vr.streak = vr.streak + 1;
-    elseif  vr.position(1) > 0 && ismember(vr.currentCueWorld,[3 4 7 8])
+    elseif  vr.position(1) > 0 && ismember(vr.currentCueWorld,[3 4])
        if vr.currentCueWorld == 3 || vr.currentCueWorld == 7
             vr = giveReward(vr,1);
             vr.whichWorldFlag = vr.currentCueWorld + 1;
             vr.numRewardsTower = vr.numRewardsTower + 1;
         elseif vr.currentCueWorld == 4 || vr.currentCueWorld == 8
-        if ~vr.debugMode
-            wait(vr.aoCOUNT,1); %Make sure iteration num is sent before giving reward to prevent AO conflicts
-            if vr.streak == 0 || vr.mulRewards == 0
+            if vr.mulRewards == 0
                 vr = giveReward(vr,1);
-            elseif (vr.streak == 1 && vr.mulRewards == 2) || (vr.streak >= 1 && vr.mulRewards == 1)
+            elseif vr.mulRewards == 1
                 vr = giveReward(vr,2);
-            elseif vr.streak >= 2 && vr.mulRewards >= 2
+            elseif vr.mulRewards >= 2
                 vr = giveReward(vr,3);
             end
-        end
             vr.whichWorldFlag = 0;
             vr.numRewardsNoTower = vr.numRewardsNoTower + 1;
         end
@@ -175,17 +150,17 @@ if vr.inITI == 0 && abs(vr.position(1)) > eval(vr.exper.variables.armLength)/2 &
         vr.streak = 0;
     end
     
-    if vr.isReward ~= 0 && ismember(vr.currentCueWorld,[1 2 3 4]) %is black?
+    if vr.isReward ~= 0 && ismember(vr.currentCueWorld,[3 4]) %is black?
         vr.trialResults(3,end) = 1;
-    elseif vr.isReward == 0 && ismember(vr.currentCueWorld,[5 6 7 8])
+    elseif vr.isReward == 0 && ismember(vr.currentCueWorld,[5 6])
         vr.trialResults(3,end) = 1;
     else
         vr.trialResults(3,end) = 0;
     end
     
-    if vr.isReward ~= 0 && ismember(vr.currentCueWorld,[1 2 5 6]) %is left?
+    if vr.isReward ~= 0 && ismember(vr.currentCueWorld,[5 6]) %is left?
         vr.trialResults(2,end) = 1;
-    elseif vr.isReward == 0 && ismember(vr.currentCueWorld,[3 4 7 8])
+    elseif vr.isReward == 0 && ismember(vr.currentCueWorld,[3 4])
         vr.trialResults(2,end) = 1;
     else
         vr.trialResults(2,end) = 0;
@@ -196,9 +171,9 @@ if vr.inITI == 0 && abs(vr.position(1)) > eval(vr.exper.variables.armLength)/2 &
     vr.inITI = 1;
     vr.numTrials = vr.numTrials + 1;
     vr.cellWrite = false;
-    if ismember(vr.currentCueWorld,[1 3 5 7])
+    if ismember(vr.currentCueWorld,[3 5])
         vr.numTrialsTower = vr.numTrialsTower + 1;
-    elseif ismember(vr.currentCueWorld,[2 4 6 8])
+    elseif ismember(vr.currentCueWorld,[4 6])
         vr.numTrialsNoTower = vr.numTrialsNoTower + 1;
     end
 else
@@ -214,7 +189,7 @@ if vr.inITI == 1
             vr.leftMazes(vr.currentCueWorld),vr.whiteMazes(vr.currentCueWorld),...
             vr.isReward,vr.itiCorrect,vr.itiMiss,vr.isReward~=0,vr.leftMazes(vr.currentCueWorld)==(vr.isReward~=0),...
             vr.whiteMazes(vr.currentCueWorld)==(vr.isReward~=0),vr.streak,vr.trialStartTime,...
-            rem(now,1),vr.startTime,'Tower',ismember(vr.currentCueWorld,[1 3 5 7])); %#ok<NASGU>
+            rem(now,1),vr.startTime,'Tower',ismember(vr.currentCueWorld,[3 5])); %#ok<NASGU>
         eval(['data',num2str(vr.numTrials),'=dataStruct;']);
         %save datastruct
         if exist(vr.pathTempMatCell,'file')
@@ -237,11 +212,11 @@ if vr.inITI == 1
         end
         randLeft = rand;
         if vr.whichWorldFlag == 0
-            if randLeft >= vr.percLeft                
-                vr.currentCueWorld = 5;                
+            if randLeft >= vr.percLeft
+                    vr.currentCueWorld = 5;
             else
-                vr.currentCueWorld = 3;                
-            end
+                    vr.currentCueWorld = 3;
+            end 
         else
             vr.currentCueWorld = vr.whichWorldFlag; 
         end        
@@ -254,7 +229,6 @@ if vr.inITI == 1
                 vr.worlds{1}.surface.visible(vr.whiteLeftTower) = 1;
             case 6
                 vr.worlds{1}.surface.visible(vr.whiteLeftNoTower) = 1;
-           
             otherwise
                 display('No World');
                 return;
@@ -264,10 +238,6 @@ if vr.inITI == 1
         vr.dp = 0; %prevents movement
         vr.trialStartTime = rem(now,1);
     end         
-end
-
-if ~vr.debugMode
-putsample(vr.aoCOUNT,-5),
 end
 
 vr.text(1).string = ['TIME ' datestr(now-vr.startTime,'HH.MM.SS')];
