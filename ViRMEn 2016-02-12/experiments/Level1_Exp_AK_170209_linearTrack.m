@@ -14,7 +14,7 @@ function vr = initializationCodeFun(vr)
 
 % set parameters
 vr.debugMode = false;
-vr.mouseNum = 013;
+vr.mouseNum = 999;
 vr.friction = 1; %no friction
 vr.adjustmentFactor = 0.01;
 vr.lengthFactor = 0;		
@@ -61,9 +61,9 @@ vr = updateTextDisplay_AK(vr);
 switch vr.STATE
     case 'TRIAL'
         % check for sucessful completion of trial
-        vr.faceBackwards = abs(mod(vr.position(4),2*3.14)) > 3.14/4;  
+        
+        vr.faceBackwards = vr.position(4) > 3.14/2 && vr.position(4) < 3*3.14/2;  
         if vr.position(2) > vr.wallLength-15 && ~vr.faceBackwards
-            % faceback doesnt work right now pos 4 is neg
             vr = giveReward_AK(vr,1);
             vr.numRewards = vr.numRewards + 1;
             vr.numTrials = vr.numTrials + 1;
