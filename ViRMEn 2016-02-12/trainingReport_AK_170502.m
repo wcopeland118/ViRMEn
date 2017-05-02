@@ -45,23 +45,30 @@ if isfield(a{2},'Tower')
     disp(['Left:' num2str(rewardsLeft) '/' num2str(leftTrials)]);
     disp(['Right:' num2str(rewardsRight) '/' num2str(rightTrials)]);
     disp(['Overall:' num2str(rewardsAll/numTrials)]);
-else
+else 
      for i = 1:length(a)-1 % first entry is conds (should fix)
         trial=cell2mat(a(i+1));
-         if trial.conds == 2  %black right = left for mouse
-            leftTrials = leftTrials+1;
-            if trial.success
-                rewardsLeft = rewardsLeft+1;
+        if isfield(trial, 'conds')
+            if trial.conds == 2  %black right = left for mouse
+                leftTrials = leftTrials+1;
+                if trial.success
+                    rewardsLeft = rewardsLeft+1;
+                    rewardsAll = rewardsAll+1;
+                end
+            else
+                rightTrials = rightTrials+1;
+                if trial.success
+                    rewardsRight = rewardsRight+1;
+                    rewardsAll = rewardsAll+1;
+                end
             end
         else
-            rightTrials = rightTrials+1;
             if trial.success
-                rewardsRight = rewardsRight+1;
+                rewardsAll = rewardsAll+1;
             end
         end
-    end
+     end
     numTrials = length(a)-1;
-    rewardsAll = rewardsLeft+rewardsRight;
     disp([num2str(rewardsAll) '/'  num2str(numTrials)]);
     disp(['Left:' num2str(rewardsLeft) '/' num2str(leftTrials)]);
     disp(['Right:' num2str(rewardsRight) '/' num2str(rightTrials)]);
