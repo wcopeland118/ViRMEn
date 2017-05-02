@@ -89,6 +89,4 @@ else
 end
 
 cumRewards = cumsum(rewardRec);
-trialDummy = 1:length(a)-1;
-figure; plot(trialDummy,cumRewards,'b',trialDummy,trialDummy/2,'r--');
-axis square; 
+figure; plot(1:length(a)-1,cumRewards);
