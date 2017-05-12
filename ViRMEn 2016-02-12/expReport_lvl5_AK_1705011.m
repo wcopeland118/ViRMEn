@@ -1,4 +1,11 @@
-
+% Continuous data is 
+% fwrite(vr.fid,[rem(now,1) vr.position([1:2,4]) vr.velocity(1:2) vr.cuePos vr.isReward vr.inITI vr.greyFac vr.breakFlag],'float');
+% Row 1: Current time as serial time number (fraction of day)
+% Row 2,3: X and Y position
+% Row 4: Heading direction
+% Row 5,6: X and Y Velocity
+% Row 7: Cue Type (2 is Black Right, 3 is White Left)
+% Row 8: Reward Flag (
 clear a;
 a = struct2cell(dataCell);
 
@@ -89,4 +96,6 @@ else
 end
 
 cumRewards = cumsum(rewardRec);
-figure; plot(1:length(a)-1,cumRewards);
+trialDummy = 1:length(a)-1;
+figure; plot(trialDummy,cumRewards,'b',trialDummy,trialDummy/2,'r--');
+axis square; 

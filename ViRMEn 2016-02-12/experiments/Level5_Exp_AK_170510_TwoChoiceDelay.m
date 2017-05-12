@@ -85,12 +85,14 @@ vr.whiteRightOn = [beginWhite vr.whiteRight vr.greyTowers backWhite TTopMiddle];
 % trial record
 vr.numTrials = 1;
 vr.trialRecord = struct('cueType',[],'mouseTurn',[],'success',[]);
+vr.clkCounter = 0; % counts iterations of runtime code
 
 %vr.cellWrite = 1; % write to cell as well
 vr.STATE = 'INIT_TRIAL';
 
 %--- RUNTIME code: executes on every iteration of the ViRMEn engine.
 function vr = runtimeCodeFun(vr)
+vr.clkCounter = vr.clkCounter+1;
 
 vr = checkManualReward(vr);
 vr = updateTextDisplay_AK(vr);
@@ -124,9 +126,9 @@ switch vr.STATE
         vr.position = vr.worlds{1}.startLocation;
         
         vr.dp = 0; %prevents movement
-        vr.trialStartTime = rem(now,1);
-        
+        vr.trialStartTime = rem(now,1);                
         vr.numTrials = vr.numTrials+1; %increment trial counters
+        vr.trialStartClk = vr.clkCounter;
         vr.trialStart = tic;
         vr.STATE = 'TRIAL';
         if vr.verbose; disp('TRIAL state'); end;
@@ -162,6 +164,8 @@ switch vr.STATE
                 disp('Position Error!');
             end
             vr.trialRecord(vr.numTrials).success=1;
+            vr.trialLength = toc(vr.trialStart);
+            vr.trialEndClk = vr.clkCounter;
             vr.STATE = 'INIT_ITI'; % signal trial end
             if vr.verbose; disp('INIT_ITI state'); end;
         else
@@ -169,10 +173,14 @@ switch vr.STATE
         end
         
     case 'INIT_ITI'
+        vr.isReward = 0; % turn off isReward flag (for GLM?)
+        
         % Save trial data
         if vr.verbose; disp('writing cell data'); end
+        vr.frameRate = vr.trialLength/(vr.trialEndClk-vr.trialStartClk+1)*1000;
         dataStruct=struct('success',vr.trialRecord(vr.numTrials).success,'conds',vr.cuePos,...
-            'greyFac',vr.greyFac); 
+            'greyFac',vr.greyFac,'trialStart',vr.trialStartClk,'trialEnd',vr.trialEndClk,...
+            'trialLength',vr.trialLength,'FrameRate',vr.frameRate); 
         eval(['data',num2str(vr.numTrials),'=dataStruct;']);
         %save datastruct
         if exist(vr.pathTempMatCell,'file')
@@ -182,6 +190,7 @@ switch vr.STATE
         end
         
         vr.inITI = 1;
+        vr.worlds{1}.surface.visible(:) = 0;
         vr.itiStartTime = tic; % start ITI timer
         vr.STATE = 'ITI';
         if vr.verbose; disp('ITI state'); end
@@ -206,4 +215,5 @@ fwrite(vr.fid,[rem(now,1) vr.position([1:2,4]) vr.velocity(1:2) vr.cuePos vr.isR
 
 % --- TERMINATION code: executes after the ViRMEn engine stops.
 function vr = terminationCodeFun(vr)
+if(vr.verbose); disp(['Session Ending: clk #' num2str(vr.clkCounter)]); end
 commonTerminationVIRMEN(vr);
