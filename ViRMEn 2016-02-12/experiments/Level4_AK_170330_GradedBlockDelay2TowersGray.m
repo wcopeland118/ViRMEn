@@ -14,7 +14,7 @@ code.termination = @terminationCodeFun;
 % --- INITIALIZATION code: executes before the ViRMEN engine starts.
 function vr = initializationCodeFun(vr)
 
-vr.debugMode = false;
+vr.debugMode = true;
 
 vr.mouseNum = 002;
 vr.greyFac = 3/6; %goes from 0 to 1 to signify the amount of maze which is grey
@@ -43,6 +43,7 @@ vr.inBreak = false;
 
 vr.numRewPer = 1;
 %increase ITI
+vr.itiCorrect=2;
 vr.increaseITI = true; %flag of whether or not ITIs should increase
 vr.missITIVec = [4 10 15]; %vector of increase in ITIs in response to consecutive missed trials
 
