@@ -1,4 +1,4 @@
-function code = AK_170318_PairedInterleaved_2Cond
+function code = Level3_Exp_AK_170318_PairedInterleaved_2Cond
 % PairedInterleaved   Code for the ViRMEn experiment PairedInterleaved.
 %   code = PairedInterleaved   Returns handles to the functions that ViRMEn
 %   executes during engine initialization, runtime and termination.
@@ -15,7 +15,7 @@ function vr = initializationCodeFun(vr)
 
 % set parameters
 vr.debugMode = false;
-vr.mouseNum = 999;
+vr.mouseNum = 013;
 vr.mulRewards = 1;
 vr.adapSpeed = 20;
 
