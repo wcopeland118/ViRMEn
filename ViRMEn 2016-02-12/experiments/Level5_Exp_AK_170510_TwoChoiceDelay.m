@@ -13,9 +13,9 @@ code.termination = @terminationCodeFun;
 % --- INITIALIZATION code: executes before the ViRMEN engine starts.
 function vr = initializationCodeFun(vr)
 
-vr.debugMode = true;
+vr.debugMode = false;
 vr.verbose = true;
-vr.mouseNum = 000;
+vr.mouseNum = 999;
 vr.greyFac = 0.5; %goes from 0 to 1 to signify the amount of maze which is grey
 vr.itiDur = 1;
 vr.breakFlag = 0;
@@ -173,12 +173,12 @@ switch vr.STATE
         end
         
     case 'INIT_ITI'
-        vr.isReward = 0; % turn off isReward flag (for GLM?)
+
         
         % Save trial data
         if vr.verbose; disp('writing cell data'); end
         vr.frameRate = vr.trialLength/(vr.trialEndClk-vr.trialStartClk+1)*1000;
-        dataStruct=struct('success',vr.trialRecord(vr.numTrials).success,'conds',vr.cuePos,...
+        dataStruct=struct('success',vr.isReward,'conds',vr.cuePos,...
             'greyFac',vr.greyFac,'trialStart',vr.trialStartClk,'trialEnd',vr.trialEndClk,...
             'trialLength',vr.trialLength,'FrameRate',vr.frameRate); 
         eval(['data',num2str(vr.numTrials),'=dataStruct;']);
@@ -189,6 +189,7 @@ switch vr.STATE
             save(vr.pathTempMatCell,['data',num2str(vr.numTrials)]);
         end
         
+        vr.isReward = 0; % turn off isReward flag (for GLM?)
         vr.inITI = 1;
         vr.worlds{1}.surface.visible(:) = 0;
         vr.itiStartTime = tic; % start ITI timer
