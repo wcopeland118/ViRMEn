@@ -17,7 +17,8 @@ vr.debugMode = false;
 vr.verbose = true;
 vr.mouseNum = 999;
 vr.greyFac = 0.5; %goes from 0 to 1 to signify the amount of maze which is grey
-vr.itiDur = 1;
+vr.itiCorrect = 2;
+vr.itiWrong = 4;
 vr.breakFlag = 0;
 vr.numRewPer = 1;
 vr.armFac = 2; % pretty sure this never changes?
@@ -173,7 +174,12 @@ switch vr.STATE
         end
         
     case 'INIT_ITI'
-
+        % Set iti time based on correct/incorrect
+        if vr.isReward
+            vr.itiDur = vr.itiCorrect;
+        else
+            vr.itiDur = vr.itiWrong;
+        end
         
         % Save trial data
         if vr.verbose; disp('writing cell data'); end
@@ -199,8 +205,10 @@ switch vr.STATE
     case 'ITI'
         % ITI runcode
         vr.itiTime = toc(vr.itiStartTime);
+      
         if vr.itiTime > vr.itiDur
             vr.STATE='INIT_TRIAL';
+              if vr.verbose; disp(['ITI time:' num2str(vr.itiDur) ' sec']); end
             if vr.verbose; disp('INIT_TRIAL state'); end
             vr.inITI=0;
         end
