@@ -18,7 +18,10 @@ if ~vr.debugMode
     pause(1e-2),
     
     vr.ao = daq.createSession('ni');
+    % ao0 for reward delivery
     vr.ao.addAnalogOutputChannel('dev1','ao0','Voltage');
+    % ao1 for synchronizing pulses
+    vr.ao.addAnalogOutputChannel('dev1','ao1','Voltage');
     vr.ao.Rate = 1e4;
 end
 

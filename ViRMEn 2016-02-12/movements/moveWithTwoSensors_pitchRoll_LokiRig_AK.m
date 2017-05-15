@@ -1,4 +1,3 @@
-function velocity = moveWithTwoSensors_pitchRoll_AK(vr)
 %global mvData
 global mvData
 velocity = [0 0 0 0];
@@ -52,11 +51,7 @@ velocity(2) = alpha*mvDataNorm(2)*cos(vr.position(4));
 
 % use roll and pitch only
 beta = 0.01*circum/V;
-velocity(1) = -alpha*mvDataNorm(2)*sin(vr.position(4));
-velocity(2) = alpha*mvDataNorm(2)*cos(vr.position(4));
-velocity(4) = beta*mvDataNorm(1);
 if flip
-    velocity(4) = -beta*mvDataNorm(1);
 end
 
 end

@@ -86,17 +86,34 @@ vr.whiteRightOn = [beginWhite vr.whiteRight vr.greyTowers backWhite TTopMiddle];
 % trial record
 vr.numTrials = 1;
 vr.trialRecord = struct('cueType',[],'mouseTurn',[],'success',[]);
-vr.clkCounter = 0; % counts iterations of runtime code
+vr.iterationNum = 0; % counts iterations of runtime code
 
 %vr.cellWrite = 1; % write to cell as well
 vr.STATE = 'INIT_TRIAL';
 
 %--- RUNTIME code: executes on every iteration of the ViRMEn engine.
 function vr = runtimeCodeFun(vr)
-vr.clkCounter = vr.clkCounter+1;
+vr.iterationNum = vr.iterationNum+1;
 
 vr = checkManualReward(vr);
 vr = updateTextDisplay_AK(vr);
+
+% send synchronization pulses
+if ~vr.debugMode
+     actualRate = vr.ao.Rate; %get sample rate
+     pulselength = round(actualRate*.002);% 2 ms pulse 
+    if vr.iterationNum == 1
+        outputSingleScan(vr.ao,[0 10]);
+        %putsample(vr.aoCOUNT,10),
+    elseif mod(vr.iterationNum,1e4)==0 %should be 1e4?
+        outputSingleScan(vr.ao,[0 vr.iterationNum/1e5]);
+        %putsample(vr.aoCOUNT,vr.iterationNum/1e5),
+    else
+        %putsample(vr.aoCOUNT,-1),
+        outputSingleScan(vr.ao,[0 -1]);
+    end
+end
+
 
 % states: INIT_TRIAL -> TRIAL -> INIT_ITI-> ITI -> INIT_TRIAL
 
@@ -129,7 +146,7 @@ switch vr.STATE
         vr.dp = 0; %prevents movement
         vr.trialStartTime = rem(now,1);                
         vr.numTrials = vr.numTrials+1; %increment trial counters
-        vr.trialStartClk = vr.clkCounter;
+        vr.trialStartClk = vr.iterationNum;
         vr.trialStart = tic;
         vr.STATE = 'TRIAL';
         if vr.verbose; disp('TRIAL state'); end;
@@ -166,7 +183,7 @@ switch vr.STATE
             end
             vr.trialRecord(vr.numTrials).success=1;
             vr.trialLength = toc(vr.trialStart);
-            vr.trialEndClk = vr.clkCounter;
+            vr.trialEndClk = vr.iterationNum;
             vr.STATE = 'INIT_ITI'; % signal trial end
             if vr.verbose; disp('INIT_ITI state'); end;
         else
@@ -224,5 +241,5 @@ fwrite(vr.fid,[rem(now,1) vr.position([1:2,4]) vr.velocity(1:2) vr.cuePos vr.isR
 
 % --- TERMINATION code: executes after the ViRMEn engine stops.
 function vr = terminationCodeFun(vr)
-if(vr.verbose); disp(['Session Ending: clk #' num2str(vr.clkCounter)]); end
+if(vr.verbose); disp(['Session Ending: clk #' num2str(vr.iterationNum)]); end
 commonTerminationVIRMEN(vr);
