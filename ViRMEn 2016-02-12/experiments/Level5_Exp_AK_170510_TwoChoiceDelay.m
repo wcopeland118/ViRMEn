@@ -88,6 +88,8 @@ vr.numTrials = 1;
 vr.trialRecord = struct('cueType',[],'mouseTurn',[],'success',[]);
 vr.iterationNum = 0; % counts iterations of runtime code
 
+     
+
 %vr.cellWrite = 1; % write to cell as well
 vr.STATE = 'INIT_TRIAL';
 
@@ -100,8 +102,8 @@ vr = updateTextDisplay_AK(vr);
 
 % send synchronization pulses
 if ~vr.debugMode
-     actualRate = vr.ao.Rate; %get sample rate
-     pulselength = round(actualRate*.002);% 2 ms pulse 
+     %actualRate = vr.ao.Rate; %get sample rate
+     %pulselength = round(actualRate*.002);% 2 ms pulse 
     if vr.iterationNum == 1
         outputSingleScan(vr.ao,[0 10]);
         %putsample(vr.aoCOUNT,10),
@@ -112,6 +114,7 @@ if ~vr.debugMode
         %putsample(vr.aoCOUNT,-1),
         outputSingleScan(vr.ao,[0 -1]);
     end
+    outputSingleScan(vr.ao,[0 -5]);
 end
 
 
