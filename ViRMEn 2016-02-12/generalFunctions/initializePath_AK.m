@@ -2,7 +2,7 @@ function [vr] = initializePath_AK(vr)
 % Initialize virmen path information
 
 %initialize cell info
-vr.experimenter = 'ATK';
+vr.experimenter = 'AK';
 vr.mazeName = func2str(vr.exper.experimentCode);
 vr.exper.variables.mouseNumber = sprintf('%03d',vr.mouseNum); %save mouse num in exper 
 
@@ -22,16 +22,16 @@ end
 vr.filenameTempMat = 'tempStorage.mat';
 vr.filenameTempMatCell = 'tempStorageCell.mat';
 vr.filenameTempDat = 'tempStorage.dat';
-vr.filenameMat = ['ATK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'.mat'];
-vr.filenameMatCell = ['ATK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_Cell.mat'];
-vr.filenameDat = ['ATK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'.dat'];
+vr.filenameMat = ['AK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'.mat'];
+vr.filenameMatCell = ['AK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_Cell.mat'];
+vr.filenameDat = ['AK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'.dat'];
 fileIndex = 0;
 fileList = what(path);
 while sum(strcmp(fileList.mat,vr.filenameMat)) > 0
     fileIndex = fileIndex + 1;
-    vr.filenameMat = ['ATK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_',num2str(fileIndex),'.mat'];
-    vr.filenameMatCell = ['ATK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_Cell_',num2str(fileIndex),'.mat'];
-    vr.filenameDat = ['ATK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_',num2str(fileIndex),'.dat'];
+    vr.filenameMat = ['AK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_',num2str(fileIndex),'.mat'];
+    vr.filenameMatCell = ['AK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_Cell_',num2str(fileIndex),'.mat'];
+    vr.filenameDat = ['AK',vr.exper.variables.mouseNumber,'_',datestr(now,'yymmdd'),'_',num2str(fileIndex),'.dat'];
     fileList = what(path);
 end
 exper = copyVirmenObject(vr.exper); %#ok<NASGU>
